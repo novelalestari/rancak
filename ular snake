@@ -1,0 +1,247 @@
+benang impor
+impor acak
+impor os.path
+dari impor tkinter *
+
+LEBAR = 500
+TINGGI = 500
+
+kelas Ular (Bingkai):
+
+    def __init__(sendiri):
+        Bingkai.__init__(sendiri)
+
+        self.master.title("main ular")
+        diri.grid()
+
+        frame1 = Bingkai (sendiri)
+        frame1.grid()
+
+        self.canvas = Kanvas(bingkai1, lebar = LEBAR, tinggi = TINGGI, bg = "putih")
+        self.canvas.grid(bentang kolom = 3)
+        self.canvas.focus_set()
+        self.canvas.bind("<Button-1>", self.create)
+        self.canvas.bind("<Key>", self.create)
+
+        newGame = Tombol(frame1, teks = "Permainan Baru", perintah = self.new_game)
+        newGame.grid(baris = 1, kolom = 0, lengket = E)
+
+        self.score_label = Label(frame1)
+        self.score_label.grid(baris = 1, kolom = 1)
+
+        self.high_score_label = Label(frame1)
+        self.high_score_label.grid(baris = 1, kolom = 2)
+
+        diri.new_game()
+
+    def new_game(sendiri):
+        self.canvas.delete(SEMUA)
+        self.canvas.create_text(WIDTH/2,HEIGHT/2-50,text="selamat datang di game ular ini!"\
+                                + "\nklik window atau tekan salah satu tombol arah"
+                                + "\nuntuk memulai game ini..", tag="welcome_text")
+
+        rectWidth = WIDTH/25
+
+        rect1 = self.canvas.create_rectangle(WIDTH/2-rectWidth/2, HEIGHT/2-rectWidth/2, WIDTH/2+rectWidth/2\
+                                             , HEIGHT/2+rectWidth/2, outline="#dbf", fill="#dbf"\
+                                             , tag="rect1")
+        rect2 = self.canvas.create_rectangle(WIDTH/2-rectWidth/2, HEIGHT/2-rectWidth/2, WIDTH/2+rectWidth/2\
+                                             , HEIGHT/2+rectWidth/2, outline="#dbf", fill="#dbf"\
+                                             , tag="rect2")
+        rect3 = self.canvas.create_rectangle(WIDTH/2-rectWidth/2, HEIGHT/2-rectWidth/2, WIDTH/2+rectWidth/2\
+                                             , HEIGHT/2+rectWidth/2, outline="#dbf", fill="#dbf"\
+                                             , tag="rect3")
+
+
+
+        self.rectWidth = rectWidth
+        self.lastDirection = Tidak Ada
+        self.direction = Tidak ada
+        self.started = Salah
+        self.game_over = Salah
+        self.score = 0
+
+
+        jika (os.path.isfile("high_score.txt")):
+            scoreFile = buka("high_score.txt")
+            self.high_score = int(scoreFile.read())
+            skorFile.close()
+        lain:
+            self.high_score = 0
+
+        self.high_score_label["text"] = "Skor tertinggi: " + str(self.high_score)
+
+        self.rectangles = [rect1,rect2,rect3]
+
+        self.dot = Tidak ada
+
+        diri.move()
+
+
+    def buat(diri, acara):
+        self.lastDirection = self.direction
+        jika self.game_over == Salah:
+            if event.keycode == 38: #untuk linux nilai nya adalah 111
+                self.direction = "naik"
+            elif event.keycode == 39: #untuk linux nilai nya adalah 114
+                self.direction = "benar"
+            elif event.keycode == 40: #untuk linux nilai nya adalah 116
+                self.direction = "turun"
+            elif event.keycode == 37: #untuk linux nilai nya adalah 113
+                self.direction = "kiri"
+            elif event.x < WIDTH/2 dan HEIGHT/3 < event.y < HEIGHT-HEIGHT/3:
+                self.direction = "kiri"
+            elif event.x > WIDTH/2 dan HEIGHT/3 < event.y < HEIGHT-HEIGHT/3:
+                self.direction= "benar"
+            elif WIDTH/3 < event.x < WIDTH-WIDTH/3 dan event.y < HEIGHT/2:
+                self.direction = "naik"
+            elif WIDTH/3 < event.x < WIDTH-WIDTH/3 dan event.y > HEIGHT/2:
+                self.direction= "turun"
+
+    def first_movement(diri):
+        w = self.rectWidth
+        self.canvas.delete("welcome_text")
+
+        jika self.direction == "kiri":
+                self.canvas.move("rect1",-w,0)
+                self.canvas.after(100)
+                self.canvas.move("rect1",-w,0)
+                self.canvas.move("rect2",-w,0)
+        elif self.direction == "turun":
+                self.canvas.move("rect1",0,w)
+                self.canvas.after(100)
+                self.canvas.move("rect1",0,w)
+                self.canvas.move("rect2",0,w)
+        elif self.direction == "benar":
+                self.canvas.move("rect1",w,0)
+                self.canvas.after(100)
+                self.canvas.move("rect1",w,0)
+                self.canvas.move("rect2",w,0)
+        elif self.direction == "naik":
+            self.canvas.move("rect1",0,-w)
+            self.canvas.after(100)
+            self.canvas.move("rect1",0,-w)
+            self.canvas.move("rect2",0,-w)
+        self.canvas.after(100)
+
+    def _move(diri):
+        w = self.rectWidth
+        sementara Benar:
+            self.score_label["text"] = "Skor: " + str(skor mandiri)
+            if self.started == False dan self.direction != Tidak ada:
+                self.first_movement()
+                self.started = Benar
+            elif self.started == Benar dan self.game_over == Salah:
+                jika self.dot == Tidak ada:
+                    diri.make_new_dot()
+                kunci = threading.Lock()
+                kunci.memperoleh()
+                endRect = self.rectangles.pop()
+                frontCoords = self.canvas.coords(self.rectangles[0])
+                endCoords = self.canvas.coords(endRect)
+
+                jika self.direction == "kiri":
+                    self.canvas.move(self.canvas.gettags(endRect), int(frontCoords[0]-endCoords[0])-w,\
+                                     int(frontCoords[1]-endCoords[1]))
+                elif self.direction == "turun":
+                    self.canvas.move(self.canvas.gettags(endRect), int(frontCoords[0]-endCoords[0]),\
+                                     int(frontCoords[1]-endCoords[1])+w)
+                elif self.direction == "benar":
+                    self.canvas.move(self.canvas.gettags(endRect), int(frontCoords[0]-endCoords[0])+w,\
+                                     int(frontCoords[1]-endCoords[1]))
+                elif self.direction == "naik":
+                    self.canvas.move(self.canvas.gettags(endRect), int(frontCoords[0]-endCoords[0]),\
+                                     int(frontCoords[1]-endCoords[1])-w)
+                self.canvas.after(100)
+                self.rectangles.insert(0, endRect)
+                kunci.rilis()
+                self.check_bounds()
+                self.check_collide()
+            elif self.game_over == Benar:
+                merusak;
+
+    def bergerak (diri):
+        threading.Thread(target=self._move).start()
+
+    def make_new_dot(sendiri):
+        jika self.dot != Tidak ada:
+            self.canvas.delete(self.dot)
+            self.dot = Tidak ada
+        dotX = random.random()*(WIDTH-self.rectWidth*2) + self.rectWidth
+        dotY = random.random()*(HEIGHT-self.rectWidth*2) + self.rectWidth
+        self.dot = self.canvas.create_rectangle(dotX,dotY,dotX+self.rectWidth,dotY+self.rectWidth\
+                                                ,outline="#ddd", isi="#ddd", tag="dot")
+
+    def tumbuh (diri):
+        w = self.rectWidth
+        kunci = threading.Lock()
+        kunci.memperoleh()
+
+        self.score += 100
+
+        endCoords = self.canvas.coords(self.rectangles[len(self.rectangles)-1])
+
+        thisTag = "persegi panjang" + str(len(sendiri.persegi panjang) + 1)
+        x1 = int(endCoords[0])
+        y1 = int(endCoords[1])
+        x2 = int(endCoords[2])
+        y2 = int(endCoords[3])
+
+        jika self.direction == "kiri":
+            x1 += w
+            x2 += w
+        elif self.direction == "benar":
+            x1 -= w
+            x2 -= w
+        elif self.direction == "turun":
+            y1 -= w
+            y2 -= w
+        elif self.direction == "naik":
+            y1 += w
+            y2 += w
+
+        thisRect = self.canvas.create_rectangle(x1, y1, x2, y2, outline="#dbf",\
+                                     isi="#dbf", tag=tag ini)
+        self.rectangles.append(thisRect)
+        kunci.rilis()
+
+
+    def check_bounds(sendiri):
+        koordinat = self.canvas.coords(self.rectangles[0])
+        jika len(koordinat) > 0:
+            jika koordinat[0] < 0 atau koordinat[1] < 0 atau koordinat[2] > WIDTH\
+               atau koordinat[3] > TINGGI:
+                diri.end_game()
+
+    def check_collide(sendiri):
+        frontCoords = self.canvas.coords(self.rectangles[0])
+
+        overlapping = self.canvas.find_overlapping(frontCoords[0],frontCoords[1]\
+                                                         ,frontCoords[2],frontCoords[3])
+        untuk item yang tumpang tindih:
+            jika item == self.dot:
+                #Ular bertabrakan dengan titik, tumbuhkan ular dan pindahkan titik
+                diri.tumbuh()
+                diri.make_new_dot()
+            if item dalam self.rectangles[3:]:
+                #Ular telah bertabrakan dengan tubuhnya, akhiri permainan
+                diri.end_game()
+
+
+        if (self.lastDirection == "kiri" dan self.direction == "kanan") atau\
+           (self.lastDirection == "kanan" dan self.direction == "kiri") atau\
+           (self.lastDirection == "up" dan self.direction == "down") atau\
+           (self.lastDirection == "down" dan self.direction == "up"):
+            diri.end_game()
+
+    def end_game(sendiri):
+        self.game_over = Benar
+        self.canvas.create_text(WIDTH/2,HEIGHT/2,text="GAME OVER!")
+        jika self.score > self.high_score:
+            scoreFile = open("high_score.txt", "w")
+            scoreFile.write(str(self.score))
+            skorFile.close()
+            self.canvas.create_text(WIDTH/2,HEIGHT/2+20,text=\
+                                    "wew.... Kamu mendapatkan Score tinggi baru!")
+
+Ular().mainloop()
